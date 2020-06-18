@@ -4,10 +4,13 @@ import User from '../app/models/User';
 import Form from '../app/models/Form';
 import Type from '../app/models/Types';
 import City from '../app/models/City';
+import File from '../app/models/File';
+import Builder from '../app/models/Builder';
+import Property from '../app/models/Property';
 
 import databaseConfig from '../config/database';
 
-const models = [User, Form, Type, City];
+const models = [User, Form, Type, City, File, Builder, Property];
 
 class Database {
   constructor() {
