@@ -1,11 +1,13 @@
 import express from 'express';
+import 'express-async-errors';
+
 import * as Sentry from '@sentry/node';
 import Youch from 'youch';
-
-import 'express-async-errors';
+import path from 'path';
 
 import routes from './routes';
 import sentryConfig from './config/sentry';
+import { tmpFolder } from './config/multer';
 
 import './database';
 
@@ -21,6 +23,7 @@ class App {
   middlewares() {
     this.server.use(Sentry.Handlers.requestHandler());
     this.server.use(express.json());
+    this.server.use('/files', express.static(tmpFolder));
   }
 
   routes() {

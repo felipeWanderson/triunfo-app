@@ -1,10 +1,10 @@
 import Sequelize, { Model } from 'sequelize';
 
-class Form extends Model {
+class Property extends Model {
   static init(sequelize) {
     super.init(
       {
-        modelo: Sequelize.STRING,
+        name: Sequelize.STRING,
         month: Sequelize.STRING,
         table_name: Sequelize.STRING,
       },
@@ -18,8 +18,8 @@ class Form extends Model {
 
   static associate(models) {
     this.belongsTo(models.Builder, { foreignKey: 'builder_id', as: 'builder' });
-    this.belongsTo(models.File, { foreignKey: 'File_id', as: 'file' });
+    this.belongsTo(models.File, { foreignKey: 'file_id', as: 'file' });
   }
 }
 
-export default Form;
+export default Property;

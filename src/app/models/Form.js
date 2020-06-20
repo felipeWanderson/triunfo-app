@@ -16,8 +16,8 @@ class Form extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.City);
-    this.belongsTo(models.Type);
+    this.belongsTo(models.City, { foreignKey: 'city_id', as: 'city' });
+    this.belongsTo(models.Type, { foreignKey: 'type_id', as: 'type' });
   }
 }
 

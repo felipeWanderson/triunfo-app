@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 
-class City extends Model {
+class Builder extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -15,8 +15,8 @@ class City extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.City, { foreignKey: 'city_id', as: 'city' });
+    this.belongsTo(models.City, { foreignKey: 'city_id', as: 'builderCity' });
   }
 }
 
-export default City;
+export default Builder;
