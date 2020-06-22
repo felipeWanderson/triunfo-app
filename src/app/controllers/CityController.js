@@ -1,3 +1,5 @@
+import * as Yup from 'yup';
+
 import City from '../models/City';
 
 class CityController {
@@ -9,6 +11,14 @@ class CityController {
   }
 
   async store(request, response) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      icon_url: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(request.body))) {
+      return response.status(400).json({ error: 'Validation is fails' });
+    }
     const { name, icon_url } = request.body;
 
     const city = await City.create({
@@ -20,6 +30,14 @@ class CityController {
   }
 
   async update(request, response) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(request.body))) {
+      return response.status(400).json({ error: 'Validation is fails' });
+    }
+
     const { id } = request.params;
 
     const city = await City.findByPk(id);

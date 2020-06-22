@@ -1,3 +1,5 @@
+import * as Yup from 'yup';
+
 import Form from '../models/Form';
 import Type from '../models/Types';
 import City from '../models/City';
@@ -34,6 +36,16 @@ class FormController {
   }
 
   async store(request, response) {
+    const schema = Yup.object().shape({
+      modelo: Yup.string().required(),
+      form_url: Yup.string().required(),
+      type: Yup.number().required(),
+      city: Yup.number().required(),
+    });
+
+    if (!(await schema.isValid(request.body))) {
+      return response.status(400).json({ error: 'Validation is fails' });
+    }
     const { modelo, form_url, type, city } = request.body;
 
     const checkCityExists = await City.findByPk(city);
@@ -59,6 +71,15 @@ class FormController {
   }
 
   async update(request, response) {
+    const schema = Yup.object().shape({
+      modelo: Yup.string().required(),
+      form_url: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(request.body))) {
+      return response.status(400).json({ error: 'Validation is fails' });
+    }
+
     const { id } = request.params;
 
     const form = await Form.findByPk(id);

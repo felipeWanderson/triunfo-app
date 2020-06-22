@@ -1,4 +1,6 @@
 import fs from 'fs';
+import * as Yup from 'yup';
+
 import Property from '../models/Property';
 import Builder from '../models/Builder';
 import File from '../models/File';
@@ -35,6 +37,16 @@ class PropertyController {
   }
 
   async store(request, response) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      month: Yup.string().required(),
+      table_name: Yup.string().required(),
+      builder: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(request.body))) {
+      return response.status(400).json({ error: 'Validation is fails' });
+    }
     const { name, month, table_name, builder } = request.body;
     const { originalname, filename: path } = request.file;
 
@@ -58,6 +70,7 @@ class PropertyController {
         file_id: file.id,
         builder_id: builder,
       });
+
       return response.json(property);
     } catch (error) {
       return response.json(error);
@@ -65,6 +78,16 @@ class PropertyController {
   }
 
   async update(request, response) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      month: Yup.string().required(),
+      table_name: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(request.body))) {
+      return response.status(400).json({ error: 'Validation is fails' });
+    }
+
     const { id } = request.params;
 
     const property = await Property.findByPk(id, {
@@ -83,8 +106,6 @@ class PropertyController {
 
     const { name, month, table_name } = request.body;
     const { originalname, filename: path } = request.file;
-
-    console.log({ originalname, path });
 
     if (name && name !== property.name) {
       const propertyExists = await Property.findOne({
@@ -106,15 +127,11 @@ class PropertyController {
       }
     }
 
-    console.log(property.file.id);
-
     const file = await File.create({
       name: originalname,
       path,
     });
-    console.log(file.dataValues);
     const filePath = `${tmpFolder}\\${property.file.path}`;
-    console.log(filePath);
 
     await File.destroy({
       where: { id: property.file.id },

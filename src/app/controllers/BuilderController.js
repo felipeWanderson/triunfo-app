@@ -1,3 +1,5 @@
+import * as Yup from 'yup';
+
 import Builder from '../models/Builder';
 import City from '../models/City';
 
@@ -35,6 +37,14 @@ class BuilderController {
   }
 
   async store(request, response) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      builderCity: Yup.number().required(),
+    });
+
+    if (!(await schema.isValid(request.body))) {
+      return response.status(400).json({ error: 'Validation is fails' });
+    }
     const { name, builderCity } = request.body;
 
     const builder = await Builder.create({
@@ -46,6 +56,14 @@ class BuilderController {
   }
 
   async update(request, response) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(request.body))) {
+      return response.status(400).json({ error: 'Validation is fails' });
+    }
+
     const { id } = request.params;
 
     const builder = await Builder.findByPk(id);

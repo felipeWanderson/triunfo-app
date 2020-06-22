@@ -1,3 +1,5 @@
+import * as Yup from 'yup';
+
 import Type from '../models/Types';
 
 class TypeController {
@@ -9,6 +11,13 @@ class TypeController {
   }
 
   async store(request, response) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(request.body))) {
+      return response.status(400).json({ error: 'Validation is fails' });
+    }
     const { name } = request.body;
 
     const checkIfExists = await Type.findOne({
@@ -27,6 +36,13 @@ class TypeController {
   }
 
   async update(request, response) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(request.body))) {
+      return response.status(400).json({ error: 'Validation is fails' });
+    }
     const { id } = request.params;
 
     const type = await Type.findByPk(id);
